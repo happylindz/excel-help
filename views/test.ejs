@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>JS-XLSX Demo</title>
+</head>
+<body>
+<p><input type="file" name="xlfile" accept="application/vnd.ms-excel,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="xlf" />打开Excel文件</p>
+<pre id="out"></pre>
+<br />
+<script src="shim.js"></script>
+<script src="jszip.js"></script>
+<script src="xlsx.js"></script>
+<script>
+/*this version is the source code that delete all the other code*/
+var X = XLSX;
+var e=e||window.event;
+var wtf_mode = false;
+function fixdata(data) {
+    var o = "", l = 0, w = 10240;
+    for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
+    o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
+    return o;
+}
+
+/*transfer the workbook to the json*/
+function to_json(workbook) {
+    var result = {};
+    workbook.SheetNames.forEach(function(sheetName) {
+        var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+        if(roa.length > 0){
+            result[sheetName] = roa;
+        }
+    });
+    console.log(result);
+    return result;
+}
+
+var xlf = document.getElementById('xlf');
+// the "e" means the event(change)
+// the event.target means the node of the Event,in this programming ,e.target.id equals xlf
+function handleFile(e) {
+    var files = e.target.files;
+    var f = files[0];
+    {   var reader = new FileReader();
+        var name = f.name;
+        reader.readAsArrayBuffer(f);
+        //onload means that the function(e) would be executed when the reader has finished the loading
+        reader.onload = function(e) {
+            //return ArrayBuffer{}
+            var data = e.target.result;
+            var arr = fixdata(data);
+            var wb = X.read(btoa(arr), {type: 'base64'});
+        };
+    }
+}
+if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+</script>
+</body>
+</html>
