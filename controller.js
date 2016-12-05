@@ -1,6 +1,7 @@
 let fsp = require("fs-promise");
 let path = require("path");
 let XLSX = require("xlsx");
+let Excel = require("./ExcelHandle.js");
 
 function ExcelHelp(){
 
@@ -22,6 +23,8 @@ ExcelHelp.saveFile = function(filePath){
 			data[sheetname].push(worksheet[z].v)
 		}
 	});
+	Excel.insertSheet(data);
+	Excel.findSheets("lindz");
 }
 
 

@@ -1,0 +1,22 @@
+body{
+	padding: 0;
+	margin: 0;
+	user-select: none;
+	-webkit-user-select: none;
+	overflow-y: none;
+}
+
+.container{
+	max-width: 960px;
+	width: 100%;
+}
+
+.upload-btn{
+	margin-top: 10px;
+}
+
+.sweet-alert p {
+	user-select: text;
+	-webkit-user-select: text;
+
+}

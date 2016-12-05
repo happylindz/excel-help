@@ -10,7 +10,8 @@ router.get("/", function(req, res) {
 	res.render("index");
 });
 
-router.post("/upload", upload.single("xlsx"), function(req, res, next){
+router.post("/upload", upload.single("excel_file"), function(req, res, next){
+	console.log(req.file);
 	let file = req.file;
 	fs.rename(file.path, file.destination + file.originalname, function(err){
 		if(err){

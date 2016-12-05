@@ -15,6 +15,7 @@
   "devDependencies": {
     "body-parser": "^1.15.2",
     "fs-promise": "^1.0.0",
+    "mongoose": "^4.7.0",
     "multer": "^1.2.0",
     "multiparty": "^4.1.2",
     "xlsx": "^0.8.0"
