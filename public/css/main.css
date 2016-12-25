@@ -18,5 +18,14 @@ body{
 .sweet-alert p {
 	user-select: text;
 	-webkit-user-select: text;
+}
 
+.excel-form{
+	width: 90%;
+	margin: auto;
+}
+
+.text-left{
+	text-align: left !important;
+	text-indent: 10px;
 }

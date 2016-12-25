@@ -7,24 +7,28 @@ function ExcelHelp(){
 
 }
 
-ExcelHelp.saveFile = function(filePath){
-	let workbook = XLSX.readFile(filePath);
+ExcelHelp.saveFile = function(userName, fileName){
+	let workbook = XLSX.readFile(__dirname + "/upload/" + fileName);
 	let sheet_name_list = workbook.SheetNames;
 	let data = {};
-	sheet_name_list.forEach( function(sheetname) {
+	data['username'] = userName;
+	data['filename'] = fileName;
+	data['fileid'] = new Date().getTime();
+	data['sheets'] = {};
+	sheet_name_list.forEach(function(sheetname) {
 		let worksheet = workbook.Sheets[sheetname];
-		if(data[sheetname] == undefined){
-			data[sheetname] = [];
+		if(data["sheets"][sheetname] == undefined){
+			data["sheets"][sheetname] = [];
 		}
 		for(z in worksheet){
 			if(z[0] === '!'){
 				continue;
 			}
-			data[sheetname].push(worksheet[z].v)
+			data["sheets"][sheetname].push(worksheet[z].v)
 		}
 	});
 	Excel.insertSheet(data);
-	Excel.findSheets("lindz");
+	return userName + "/" + data["fileid"];
 }
 
 

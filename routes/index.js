@@ -5,26 +5,46 @@ let upload = multer({ dest: 'upload/' });
 let path = require("path");
 let fs = require("fs");
 let XlsxHandler = require("../controller.js");
+let Excel = require("../ExcelHandle.js");
+
 
 router.get("/", function(req, res) {
 	res.render("index");
 });
 
 router.post("/upload", upload.single("excel_file"), function(req, res, next){
-	console.log(req.file);
 	let file = req.file;
 	fs.rename(file.path, file.destination + file.originalname, function(err){
 		if(err){
 			throw err;
+			res.send({
+				code: 1,
+				message: "服务器发生故障，请稍后重试。"
+			})
 		}
 		next();
 	});
 }, function(req, res, next){
-	XlsxHandler.saveFile(req.file.destination + req.file.originalname);
-	next();
-}, function(req, res){
-	res.send("Success");
+	let message =	XlsxHandler.saveFile(req.body.username, req.file.originalname);
+	res.send({
+		code: 0,
+		message: message
+	})
 });
+
+
+router.get("/:user/:id", function(req, res){
+
+	Excel.findSheets(req.params.user, req.params.id, function(data){
+		console.log(data);
+		if(data != undefined){
+			res.render("fill", {excel: data});
+		}else{
+			res.send("Sheets Not Found!");
+		}
+	});
+	
+})
 
 
 

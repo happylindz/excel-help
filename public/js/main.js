@@ -32,17 +32,19 @@ $(document).ready(function(){
 				});
 
 			}).then(function(res){
-				let address = window.location.protocol + "//" + window.location.host;
-				swal({
-				  title: "上传成功",
-				  text: "分享填写的地址为：" + address,
-				  type: "success",
-				  confirmButtonText: "确认",
-				  closeOnConfirm: true,
-				}, function(){
-					$("#excel_input").fileinput("reset");
-					$("#excel_input").val("");
-				});
+				if(res.code == 0){
+					let address = window.location.protocol + "//" + window.location.host + "/" + res.message;
+					swal({
+					  title: "上传成功",
+					  text: "分享填写的地址为：" + address,
+					  type: "success",
+					  confirmButtonText: "确认",
+					  closeOnConfirm: true,
+					}, function(){
+						$("#excel_input").fileinput("reset");
+						$("#excel_input").val("");
+					});
+				}
 			});
 
 		}else{
@@ -53,6 +55,11 @@ $(document).ready(function(){
 			});
 		}
 		return false;
-	})
+	});
+	// $(document).on("click", "#submit-sheets"， function(){
 
+		
+
+
+	// });
 });
