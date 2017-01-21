@@ -4,9 +4,9 @@ let multer  = require('multer');
 let upload = multer({ dest: 'upload/' });
 let path = require("path");
 let fs = require("fs");
-let XlsxHandler = require("../controller.js");
-let Excel = require("../ExcelHandle.js");
-
+let XlsxHandler = require("../XlsxHandler.js");
+let xlsx = require('node-xlsx');
+let xlsxHandler = new XlsxHandler();
 
 router.get("/", function(req, res) {
 	res.render("index");
@@ -25,25 +25,45 @@ router.post("/upload", upload.single("excel_file"), function(req, res, next){
 		next();
 	});
 }, function(req, res, next){
-	let message =	XlsxHandler.saveFile(req.body.username, req.file.originalname);
+	let message =	xlsxHandler.saveFile(req.body.username, req.file.originalname);
 	res.send({
 		code: 0,
 		message: message
 	})
 });
 
+router.post("/submitdata", function(req, res){
+	let data = req.body;
+	xlsxHandler.insertData(data);
+	res.send("上传成功");
+})
 
-router.get("/:user/:id", function(req, res){
 
-	Excel.findSheets(req.params.user, req.params.id, function(data){
-		console.log(data);
-		if(data != undefined){
-			res.render("fill", {excel: data});
-		}else{
+router.get("/:username/:id/download", function(req, res){
+
+	
+	// const data = [[1, 2, 3], [true, false, null, 'sheetjs'], ['foo', 'bar', new Date('2014-02-19T14:30Z'), '0.3'], ['baz', null, 'qux']];
+	// var buffer = xlsx.build([{name: "mySheetName", data: data}]);
+	// res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+ //  res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+	// res.end(buffer, 'binary'); 
+	res.download("./test.xlsx");
+});
+
+
+
+router.get("/:username/:id", function(req, res){
+	let data = {
+		user: req.params.username,
+		id: req.params.id
+	}
+	xlsxHandler.findSheets(data, function(result) {
+		if(result.ok == 0) {
+			res.render("fill", {excel: result});
+		}	else {
 			res.send("Sheets Not Found!");
 		}
-	});
-	
+	});	
 })
 
 

@@ -14,10 +14,13 @@
   },
   "devDependencies": {
     "body-parser": "^1.15.2",
+    "excel-export": "^0.5.1",
     "fs-promise": "^1.0.0",
-    "mongoose": "^4.7.0",
     "multer": "^1.2.0",
     "multiparty": "^4.1.2",
+    "mysql": "^2.12.0",
+    "node-mysql-promise": "0.0.6",
+    "node-xlsx": "^0.7.4",
     "xlsx": "^0.8.0"
   }
 }

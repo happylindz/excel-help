@@ -1,13 +1,13 @@
+let nodeXlsx = require('node-xlsx');
 let fsp = require("fs-promise");
 let path = require("path");
 let XLSX = require("xlsx");
-let Excel = require("./ExcelHandle.js");
-
-function ExcelHelp(){
-
+let DataHandler = require("./DataHandler.js");
+ 
+function XlsxHandler(){
+	this.excel = new DataHandler();
 }
-
-ExcelHelp.saveFile = function(userName, fileName){
+XlsxHandler.prototype.saveFile = function(userName, fileName){
 	let workbook = XLSX.readFile(__dirname + "/upload/" + fileName);
 	let sheet_name_list = workbook.SheetNames;
 	let data = {};
@@ -27,9 +27,21 @@ ExcelHelp.saveFile = function(userName, fileName){
 			data["sheets"][sheetname].push(worksheet[z].v)
 		}
 	});
-	Excel.insertSheet(data);
+	this.excel.insertSheet(data);
 	return userName + "/" + data["fileid"];
 }
 
+XlsxHandler.prototype.findSheets = function(data, callback) {
+	this.excel.findSheets(data, callback);
+}
 
-module.exports = ExcelHelp;
+XlsxHandler.prototype.insertData = function(data) {
+	this.excel.insertData(data);
+}
+
+XlsxHandler.prototype.exportFile = function() {
+	
+}
+
+
+module.exports = XlsxHandler;
