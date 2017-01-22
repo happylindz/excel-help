@@ -6,15 +6,18 @@ let path = require("path");
 let fs = require("fs");
 let XlsxHandler = require("../XlsxHandler.js");
 let xlsx = require('node-xlsx');
+let basicAuth = require("basic-auth");
 let xlsxHandler = new XlsxHandler();
 
-router.get("/", function(req, res) {
+router.get("/", (req, res) => {
 	res.render("index");
 });
 
-router.post("/upload", upload.single("excel_file"), function(req, res, next){
+router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 	let file = req.file;
-	fs.rename(file.path, file.destination + file.originalname, function(err){
+	let path = file.destination + file.originalname;
+	res.locals.path = path;
+	fs.rename(file.path, path, (err) => {
 		if(err){
 			throw err;
 			res.send({
@@ -24,48 +27,101 @@ router.post("/upload", upload.single("excel_file"), function(req, res, next){
 		}
 		next();
 	});
-}, function(req, res, next){
-	let message =	xlsxHandler.saveFile(req.body.username, req.file.originalname);
-	res.send({
-		code: 0,
-		message: message
-	})
+}, function(req, res){
+	xlsxHandler.saveFile(req.body.username, req.file.originalname).then((data) => {
+		res.send({
+			code: 0,
+			data: data
+		});
+	}).then(() => {
+		fs.unlink(res.locals.path);
+	});
 });
 
-router.post("/submitdata", function(req, res){
+
+router.post("/submitdata", (req, res) => {
 	let data = req.body;
-	xlsxHandler.insertData(data);
-	res.send("上传成功");
+	xlsxHandler.insertData(data).then(() => {
+		res.send("上传成功");
+	});
 })
 
 
-router.get("/:username/:id/download", function(req, res){
+let auth = function(req, res, next) {
+ 	function unauthorized(res) { 
+    res.set('WWW-Authenticate', 'Basic realm=Input User&Password');
+    return res.sendStatus(401);
+  }
+  var user = basicAuth(req);
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  }
 
-	
-	// const data = [[1, 2, 3], [true, false, null, 'sheetjs'], ['foo', 'bar', new Date('2014-02-19T14:30Z'), '0.3'], ['baz', null, 'qux']];
-	// var buffer = xlsx.build([{name: "mySheetName", data: data}]);
-	// res.setHeader('Content-Type', 'application/vnd.openxmlformats');
- //  res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
-	// res.end(buffer, 'binary'); 
-	res.download("./test.xlsx");
+  if (user.name === 'admin' && user.pass === '123') {
+    return next();
+  } else {
+    return unauthorized(res);
+  }
+}
+router.get("/download/:id", (req, res, next) => {
+	let id = req.params.id;
+	function unauthorized(res) { 
+    res.set('WWW-Authenticate', 'Basic realm=Input User&Password');
+    return res.sendStatus(401);
+  }
+  let user = basicAuth(res);
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  }
+  xlsxHandler.checkUser(id).then((data) => {
+  	console.log(data);
+  	if(data.code != 0) {
+  		return unauthorized(res);
+  	}
+  	if(data.username = user.name && data.password == user.pass) {
+  		next();
+  	}else {
+  		return unauthorized(res);
+  	}
+  })
 });
 
+router.get("/download/:id", (req, res) => {
+	let data = {
+		id: req.params.id
+	}
+	xlsxHandler.exportFile(data).then((result) => {
+		if(result == false) {
+			next();
+		}else {
+			res.download("./downloads/" + result);
+		}
+	}).then(() => {
+		fs.unlink("./downloads/" + result);
+	});
+});
 
-
-router.get("/:username/:id", function(req, res){
+router.get("/:username/:id", (req, res, next) => {
 	let data = {
 		user: req.params.username,
 		id: req.params.id
 	}
-	xlsxHandler.findSheets(data, function(result) {
-		if(result.ok == 0) {
+	xlsxHandler.findSheets(data).then((result) => {
+		if(result.code == 0) {
 			res.render("fill", {excel: result});
 		}	else {
-			res.send("Sheets Not Found!");
+			next();
 		}
 	});	
 })
 
+router.get("/template", (req, res) => {
+	res.download("./template.xlsx");
+});
+
+router.all('*', (req, res) => {
+	res.send("您查找的页面未能找到，请重新输入。");
+});
 
 
 module.exports = router;

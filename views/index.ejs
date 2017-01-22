@@ -19,6 +19,20 @@
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
+<!--     <div>
+        <form role="form" id="login-panel">
+        <div class="form-group">
+        <label for="login-username">用户名：</label>
+            <input type="text" class="form-control" id="login-username" placeholder="仅允许字符、数字和下划线，首字母为字符">
+          </div>
+          <div class="form-group">
+            <label for="login-password">密码：</label>
+            <input type="password" class="form-control" id="login-password" placeholder="请输入密码">
+          </div>
+          <button type="click" class="btn btn-default">登录</button>
+        </form>
+    </div>
+ -->    
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid"> 
         <div class="navbar-header">
@@ -33,8 +47,8 @@
         </div>
         <div class="collapse navbar-collapse navbar-right" id="example-navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#">注册</a></li>
-                <li><a href="#">登录</a></li>
+                <li><a href="#" id="register">注册</a></li>
+                <li><a href="#" id="login">登录</a></li>
             </ul>
         </div>
         </div>
@@ -49,6 +63,8 @@
                 <p>
                     <!--显示按钮用于打开Excel文件-->
                     <a class="btn btn-success btn-lg" href="#select_file_div" role="button">上传一个Excel</a>
+                    <a class="btn btn-info btn-lg" target="_blank" href="/template" role="button">下载表格模板</a>
+
                 </p>
             </div>
         </div>
@@ -117,7 +133,7 @@
         <div class="row">
             <footer class="text-center">
                 <hr>
-                <h4>Excel填表开发者@2016</h4>
+                <h4>Excel填表开发者@2017</h4>
             </footer>
         </div>
     </div>

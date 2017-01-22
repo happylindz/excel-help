@@ -29,3 +29,18 @@ body{
 	text-align: left !important;
 	text-indent: 10px;
 }
+
+#login-panel {
+	padding: 50px;
+	max-width: 400px;
+	width: 80%;
+  background: #999;
+  height: 300px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
