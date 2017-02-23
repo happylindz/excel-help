@@ -48,6 +48,7 @@ class DataHandler{
 	queryPromise(sql) {
 		return new Promise((resolve, reject) => {
 			this.connection.query(sql, (err, results) => {
+				console.log(err);
 				if(err) {
 					reject(err);
 				}else {
@@ -59,22 +60,21 @@ class DataHandler{
 
 	insertSheet(data) {
 		let collections = [];
-		let username = data.username;
 		let filename = data.filename;
 		let fileid = data.fileid;
 		let fields = [];
 		for(let key in data.sheets) {
-			let sql = `insert into excel(username, filename, fileid, sheetname) values('${username}', '${filename}', '${fileid}', '${key}')`; 
+			let sql = `insert into excel(filename, fileid, sheetname) values('${filename}', '${fileid}', '${key}');`; 
 			collections.push(sql);
 			data.sheets[key].forEach((item) => {
-				sql = `insert into excelInfo(fileid, sheetname, keyname) values('${fileid}', '${key}', "${item}")`;
+				sql = `insert into excelInfo(fileid, sheetname, keyname) values('${fileid}', '${key}', "${item}");`;
 				fields.push(item);
 				collections.push(sql);
 			});
 		}
-		let sql = `create table ${username}${fileid}(id int auto_increment primary key`;
+		let sql = `create table excel${fileid}(id int auto_increment primary key`;
 		for(let i = 0; i < fields.length; i++) {
-			sql += `, ${fields[i]} varchar(20) not null`;
+			sql += `, ${fields[i]} varchar(45) not null`;
 		}
 		sql += `)auto_increment=10001;`;
 		collections.push(sql);
@@ -133,19 +133,23 @@ class DataHandler{
 			let sheet = data.sheets[key];
 			for(let item in sheet) {
 				keySet.push(item);
-				resultSet.push("'" + sheet[item] + "'");
+				resultSet.push(sheet[item]);
 			}
 		}
+
+		resultSet = resultSet.map((item) => {
+			return this.connection.escape(item);
+		})
 		let sql = `insert into ${tableName}(${keySet.join(",")}) values(${resultSet.join(",")})`;	
+		console.log(sql);
 		return this.queryPromise(sql);
 	}
 
 	findXlsx(info) {
 
-		const fileSQL =  `select filename, sheetname from excel where fileid=${info.id} and username='${info.user}';`;
+		const fileSQL =  `select filename, sheetname from excel where fileid=${info.id};`;
 		const sheetSQL = `select sheetname, keyname from excelinfo where fileid=${info.id};`;
-		const dataSQL = `select * from ${info.user + info.id};`; 
-
+		const dataSQL = `select * from excel${info.id};`; 
 
 		let filePromise = this.queryPromise(fileSQL);
 		let sheetPromise = this.queryPromise(sheetSQL);

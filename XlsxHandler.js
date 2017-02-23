@@ -13,16 +13,23 @@ let DataHandler = require("./DataHandler.js");
  		return this.excel.checkUser(id);
  	}
 
- 	saveFile(userName, fileName){
+ 	saveFile(fileName) {
 		let workbook = XLSX.readFile(__dirname + "/upload/" + fileName);
 		let sheet_name_list = workbook.SheetNames;
 		let data = {};
-		data['username'] = userName;
 		data['filename'] = fileName;
 		data['fileid'] = new Date().getTime();
 		data['sheets'] = {};
-		sheet_name_list.forEach((sheetname) => {
+		for(let i = 0; i < sheet_name_list.length; i ++) {
+			let sheetname = sheet_name_list[i];
 			let worksheet = workbook.Sheets[sheetname];
+			if(worksheet['!ref'].charAt(worksheet['!ref'].length - 1) != "1") {
+				console.log("wevwrvwe");
+				return Promise.resolve({
+					code: 1,
+					data: null
+				});
+			}
 			if(data["sheets"][sheetname] == undefined){
 				data["sheets"][sheetname] = [];
 			}
@@ -32,11 +39,14 @@ let DataHandler = require("./DataHandler.js");
 				}
 				data["sheets"][sheetname].push(worksheet[z].v)
 			}
-		});
+		}
 		return this.excel.insertSheet(data).then((result) => {
-			result["path"] = userName + "/" + data["fileid"];
+			result["path"] = "excel/" + data["fileid"];
 			result['download'] = "download/" + data["fileid"];
-			return result;
+			return {
+				code: 0,
+				data: result
+			};
 		});
 	}
 

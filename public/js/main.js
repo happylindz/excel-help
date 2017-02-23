@@ -15,7 +15,6 @@ $(document).ready(function(){
 		var isEmpty = $("#excel_input").val();
 		if(isEmpty != ""){
 			var excel_file = new FormData($("#excel_form")[0]);
-			excel_file.append("username", "excel");
 			new Promise(function(resolve, reject){
 				$.ajax({
 					cache: false,
@@ -36,7 +35,7 @@ $(document).ready(function(){
 			}).then(function(res){
 				if(res.code == 0){
 					var address = window.location.protocol + "//" + window.location.host + "/";
-					var message = "分享填写的地址为：" + address + res.data.path;
+					var message = "表格分享地址为：" + address + res.data.path;
 					message += "\n表格下载地址为：" + address + res.data.download;
 					message += "\n用户名: " + res.data.username;
 					message += "\n密码: " + res.data.password;
@@ -70,7 +69,7 @@ $(document).ready(function(){
 		}
 		return false;
 	});
-	$(document).on("click", "#submit-sheets",function(){
+	$(document).on("click", "#submit-sheets", function(){
 		var sheetsData = {};
 		var sheets = $("#excel_form").find(".sheet-group");
 		sheets.each(function(index, sheet){

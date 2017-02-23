@@ -28,13 +28,12 @@ router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 		next();
 	});
 }, function(req, res){
-	xlsxHandler.saveFile(req.body.username, req.file.originalname).then((data) => {
-		res.send({
-			code: 0,
-			data: data
-		});
-	}).then(() => {
-		fs.unlink(res.locals.path);
+	xlsxHandler.saveFile(req.file.originalname).then((data) => {
+		console.log(data);
+		res.send(data);
+		if(data.code == 0) {
+			fs.unlink(res.locals.path);
+		}
 	});
 });
 
@@ -46,23 +45,6 @@ router.post("/submitdata", (req, res) => {
 	});
 })
 
-
-let auth = function(req, res, next) {
- 	function unauthorized(res) { 
-    res.set('WWW-Authenticate', 'Basic realm=Input User&Password');
-    return res.sendStatus(401);
-  }
-  var user = basicAuth(req);
-  if (!user || !user.name || !user.pass) {
-    return unauthorized(res);
-  }
-
-  if (user.name === 'admin' && user.pass === '123') {
-    return next();
-  } else {
-    return unauthorized(res);
-  }
-}
 router.get("/download/:id", (req, res, next) => {
 	let id = req.params.id;
 	function unauthorized(res) { 
@@ -74,7 +56,6 @@ router.get("/download/:id", (req, res, next) => {
     return unauthorized(res);
   }
   xlsxHandler.checkUser(id).then((data) => {
-  	console.log(data);
   	if(data.code != 0) {
   		return unauthorized(res);
   	}
@@ -94,16 +75,19 @@ router.get("/download/:id", (req, res) => {
 		if(result == false) {
 			next();
 		}else {
-			res.download("./downloads/" + result);
+			res.download("./downloads/" + result, (err) => {
+				if(err) {
+					console.log(err);
+				}else {
+					fs.unlink("./downloads/" + result);
+				}
+			})
 		}
-	}).then(() => {
-		fs.unlink("./downloads/" + result);
 	});
 });
 
-router.get("/:username/:id", (req, res, next) => {
+router.get("/excel/:id", (req, res, next) => {
 	let data = {
-		user: req.params.username,
 		id: req.params.id
 	}
 	xlsxHandler.findSheets(data).then((result) => {
@@ -116,7 +100,7 @@ router.get("/:username/:id", (req, res, next) => {
 })
 
 router.get("/template", (req, res) => {
-	res.download("./template.xlsx");
+	res.download("./template.png");
 });
 
 router.all('*', (req, res) => {

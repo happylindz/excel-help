@@ -19,37 +19,10 @@
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<!--     <div>
-        <form role="form" id="login-panel">
-        <div class="form-group">
-        <label for="login-username">用户名：</label>
-            <input type="text" class="form-control" id="login-username" placeholder="仅允许字符、数字和下划线，首字母为字符">
-          </div>
-          <div class="form-group">
-            <label for="login-password">密码：</label>
-            <input type="password" class="form-control" id="login-password" placeholder="请输入密码">
-          </div>
-          <button type="click" class="btn btn-default">登录</button>
-        </form>
-    </div>
- -->    
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid"> 
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#example-navbar-collapse">
-                <span class="sr-only">切换导航</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
             <a class="navbar-brand" href="#">Excel 助手</a>
-        </div>
-        <div class="collapse navbar-collapse navbar-right" id="example-navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="#" id="register">注册</a></li>
-                <li><a href="#" id="login">登录</a></li>
-            </ul>
         </div>
         </div>
     </nav>
@@ -63,8 +36,7 @@
                 <p>
                     <!--显示按钮用于打开Excel文件-->
                     <a class="btn btn-success btn-lg" href="#select_file_div" role="button">上传一个Excel</a>
-                    <a class="btn btn-info btn-lg" target="_blank" href="/template" role="button">下载表格模板</a>
-
+                    <a class="btn btn-info btn-lg" id="preview" target="_blank" href="/img/template.png" >预览表格模板</a>
                 </p>
             </div>
         </div>
@@ -96,7 +68,7 @@
                 </div>
             </div>
 
-            <!--显示第三不得面板-->
+            <!--显示第三的面板-->
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3><strong>第三步</strong></h1>
@@ -114,7 +86,12 @@
                 <h1><strong>现在就开始上传你的Excel吧</strong></h1>
             </div>
         </div>
-
+        <div class="row">
+            <div class="form-group">
+                <label>手机号: </label>
+                <input type="text" class="phonenumber form-control" placeholder="重要信息将发送到你手机上">
+            </div>
+        </div>
         <!--选择Excel文件的输入框组件-->
         <div id="select_file_div" class="row">
             <!-- 提交Excel文件的表单 -->
