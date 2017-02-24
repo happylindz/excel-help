@@ -1,129 +1,83 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Excel Help</title>
+<% include header.ejs %>
 
-    <!-- Bootstrap -->
-    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="container">
+  <!-- 巨幕作为该网页的标题-->
+  <div class="row">
+    <div class="jumbotron">
+      <h1>让填表格更简单</h1>
+      <p>你可以上传表格后将链接分享给你的同学，让他们填去吧:)</p>
+      <p>
+        <!--显示按钮用于打开Excel文件-->
+        <a class="btn btn-success btn-lg" href="#select_file_div" role="button">上传一个Excel</a>
+        <a class="btn btn-info btn-lg" id="preview" target="_blank" href="/img/template.png" >预览表格模板</a>
+        <a class="btn btn-info btn-lg" target="_blank" href="/template" >下载表格模板</a>
+      </p>
+    </div>
+  </div>
+  <!--分割行-->
+  <div class="row">
+    <h2><strong>具体步骤:</strong></h2>
+  </div>
 
-    <!--引入上传文件控件的css文件-->
-    <link href="/bower_components/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
-    
-    <!-- 引入sweetalert -->
-    <link href="/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet">
-
-    <!--我的css文件-->
-    <link href="/css/main.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid"> 
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Excel 助手</a>
-        </div>
-        </div>
-    </nav>
-    <div class="container">
-
-        <!-- 巨幕作为该网页的标题-->
-        <div class="row">
-            <div class="jumbotron">
-                <h1>让填表格更简单</h1>
-                <p>你可以上传表格后将链接分享给你的同学，让他们填去吧:)</p>
-                <p>
-                    <!--显示按钮用于打开Excel文件-->
-                    <a class="btn btn-success btn-lg" href="#select_file_div" role="button">上传一个Excel</a>
-                    <a class="btn btn-info btn-lg" id="preview" target="_blank" href="/img/template.png" >预览表格模板</a>
-                </p>
-            </div>
-        </div>
-
-        <!--分割行-->
-        <div class="row">
-            <h2><strong>具体步骤:</strong></h2>
-        </div>
-
-        <!--显示具体步骤-->
-        <div class="row">
-            <!--第一步的面板-->
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3><strong>第一步</strong></h3>
-                </div>
-                <div class="panel-body">
-                    <h4><strong>上传你的Excel文件</strong></h4>
-                </div>
-            </div>
-
-            <!--显示第二步的面板-->
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3><strong>第二步</strong></h3>
-                </div>
-                <div class="panel-body">
-                    <h4><strong>分享你的Excel文件链接</strong></h4>
-                </div>
-            </div>
-
-            <!--显示第三的面板-->
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h3><strong>第三步</strong></h1>
-                </div>
-                <div class="panel-body">
-                    <h4><strong>同学们自主填写Excel表格</strong></h4>
-                </div>
-            </div>
-        </div>
-
-        <!--分隔行-->
-        <div class="row">
-            <hr>
-            <div class="col-sm-12 text-center">
-                <h1><strong>现在就开始上传你的Excel吧</strong></h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group">
-                <label>手机号: </label>
-                <input type="text" class="phonenumber form-control" placeholder="重要信息将发送到你手机上">
-            </div>
-        </div>
-        <!--选择Excel文件的输入框组件-->
-        <div id="select_file_div" class="row">
-            <!-- 提交Excel文件的表单 -->
-            <form id="excel_form" enctype="multipart/form-data">
-                <div class="control-group">
-                    <label class="control-label"><strong>选择你要上传的Excel文件（每次上传一个Excel文件）</strong></label>
-                    <!-- 选择Excel文件的控件 -->
-                    <input id="excel_input" name="excel_file" type="file" class="file file-loading">
-                </div>       
-            </form>
-            <div class="row text-center upload-btn">
-                <button class="btn btn-success" id="upload-file">上传Excel文件</button>
-            </div>
-        </div>
-        <!--脚注-->
-        <div class="row">
-            <footer class="text-center">
-                <hr>
-                <h4>Excel填表开发者@2017</h4>
-            </footer>
-        </div>
+  <!--显示具体步骤-->
+  <div class="row">
+    <!--第一步的面板-->
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3><strong>第一步</strong></h3>
+      </div>
+      <div class="panel-body">
+        <h4><strong>上传你的Excel文件</strong></h4>
+      </div>
     </div>
 
-<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--显示第二步的面板-->
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3><strong>第二步</strong></h3>
+      </div>
+      <div class="panel-body">
+        <h4><strong>分享你的Excel文件链接</strong></h4>
+      </div>
+    </div>
 
-<!--引入上传文件的js文件-->
-<script src="/bower_components/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <!--显示第三的面板-->
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3><strong>第三步</strong></h1>
+      </div>
+      <div class="panel-body">
+        <h4><strong>同学们自主填写Excel表格</strong></h4>
+      </div>
+    </div>
+  </div>
 
-<!-- 引入sweetalert的js文件 -->
-<script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
-<script src="/js/main.js"></script>
+  <!--分隔行-->
+  <div class="row">
+    <hr>
+    <div class="col-sm-12 text-center">
+      <h1><strong>现在就开始上传你的Excel吧</strong></h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <label>手机号: </label>
+      <input type="text" class="form-control" id="phonenumber" placeholder="重要信息将发送到你手机上">
+    </div>
+  </div>
+  <!--选择Excel文件的输入框组件-->
+  <div id="select_file_div" class="row">
+    <!-- 提交Excel文件的表单 -->
+    <form id="excel_form" enctype="multipart/form-data">
+      <div class="control-group">
+        <label class="control-label"><strong>选择你要上传的Excel文件（每次上传一个Excel文件）</strong></label>
+        <!-- 选择Excel文件的控件 -->
+        <input id="excel_input" name="excel_file" type="file" class="file file-loading">
+      </div>       
+    </form>
+    <div class="row text-center upload-btn">
+      <button class="btn btn-success" id="upload-file">上传Excel文件</button>
+    </div>
+  </div>
+<% include footer.ejs %>
 
-</body>
-</html>

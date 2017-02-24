@@ -1,6 +1,6 @@
 let mysql = require('mysql');
 
-class DataHandler{
+class DataHandler {
 
 	constructor() {
 		let connection = mysql.createConnection({
@@ -48,7 +48,6 @@ class DataHandler{
 	queryPromise(sql) {
 		return new Promise((resolve, reject) => {
 			this.connection.query(sql, (err, results) => {
-				console.log(err);
 				if(err) {
 					reject(err);
 				}else {
@@ -78,7 +77,6 @@ class DataHandler{
 		}
 		sql += `)auto_increment=10001;`;
 		collections.push(sql);
-
 		let auth = this.createAuth();
 		sql = `insert into user(fileid, username, password) values('${fileid}', '${auth.username}', '${auth.password}')`;
 		collections.push(sql);
@@ -141,7 +139,6 @@ class DataHandler{
 			return this.connection.escape(item);
 		})
 		let sql = `insert into ${tableName}(${keySet.join(",")}) values(${resultSet.join(",")})`;	
-		console.log(sql);
 		return this.queryPromise(sql);
 	}
 
@@ -197,7 +194,6 @@ class DataHandler{
 			return result;
 		});
 	}
-
 
 }
 

@@ -15,6 +15,7 @@ $(document).ready(function(){
 		var isEmpty = $("#excel_input").val();
 		if(isEmpty != ""){
 			var excel_file = new FormData($("#excel_form")[0]);
+			excel_file.append("phone", $('#phonenumber').val());
 			new Promise(function(resolve, reject){
 				$.ajax({
 					cache: false,
@@ -35,11 +36,9 @@ $(document).ready(function(){
 			}).then(function(res){
 				if(res.code == 0){
 					var address = window.location.protocol + "//" + window.location.host + "/";
-					var message = "表格分享地址为：" + address + res.data.path;
-					message += "\n表格下载地址为：" + address + res.data.download;
-					message += "\n用户名: " + res.data.username;
-					message += "\n密码: " + res.data.password;
-					message += "\n为了您的信息安全，请妥善保管你的下载地址，用户名以及密码，以免信息泄露。"
+					var message = "表格分享地址为：" + address + res.share;
+					message += "\n下载地址为：" + address + res.download;
+					message += "\n用户名及密码已短信发送，请妥善保管你的下载地址，用户名以及密码，以免信息泄露。"
 					swal({
 					  title: "上传成功",
 					  text: message,
@@ -50,10 +49,10 @@ $(document).ready(function(){
 						$("#excel_input").fileinput("reset");
 						$("#excel_input").val("");
 					});
-				}else if(res.code == 1) {
+				}else{
 					swal({
 						title: "上传失败",
-						text: "请按照模板中对应的格式进行上传",
+						text: res.message,
 						type: "error",
 						confirmButtonText: "确认"
 					})
@@ -69,6 +68,7 @@ $(document).ready(function(){
 		}
 		return false;
 	});
+
 	$(document).on("click", "#submit-sheets", function(){
 		var sheetsData = {};
 		var sheets = $("#excel_form").find(".sheet-group");
@@ -103,4 +103,19 @@ $(document).ready(function(){
 		
 		return false;
 	});
+	// $(document).on('click', '#download', function() {
+	// 	var $down = $("#download");
+	// 	let data = {
+	// 		user: $down.attr('data-user'),
+	// 		pass: $down.attr('data-pass')
+	// 	};
+	// 	$.ajax({
+	// 		url: '/download/' + $down.attr('data-id'),	
+	// 		type: 'POST',
+	// 		data: data
+	// 	})
+	// 	.done(function(res) {
+	// 	});		
+		
+	// })
 });

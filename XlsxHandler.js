@@ -20,16 +20,9 @@ let DataHandler = require("./DataHandler.js");
 		data['filename'] = fileName;
 		data['fileid'] = new Date().getTime();
 		data['sheets'] = {};
-		for(let i = 0; i < sheet_name_list.length; i ++) {
+		for(let i = 0; i < sheet_name_list.length; i++) {
 			let sheetname = sheet_name_list[i];
 			let worksheet = workbook.Sheets[sheetname];
-			if(worksheet['!ref'].charAt(worksheet['!ref'].length - 1) != "1") {
-				console.log("wevwrvwe");
-				return Promise.resolve({
-					code: 1,
-					data: null
-				});
-			}
 			if(data["sheets"][sheetname] == undefined){
 				data["sheets"][sheetname] = [];
 			}
@@ -43,10 +36,7 @@ let DataHandler = require("./DataHandler.js");
 		return this.excel.insertSheet(data).then((result) => {
 			result["path"] = "excel/" + data["fileid"];
 			result['download'] = "download/" + data["fileid"];
-			return {
-				code: 0,
-				data: result
-			};
+			return result;
 		});
 	}
 
@@ -105,7 +95,26 @@ let DataHandler = require("./DataHandler.js");
 			return data.filename;
 		});
 	}
-
+	
+	findFile(info) {
+		return this.excel.findXlsx(info).then((data) => {
+			let result = [];
+			let idx = 0;
+			for(let key in data.sheets) {
+				let sheet = data.sheets[key];
+				for(let row = 0; row < sheet.length; row++) {
+					if(result[row] == undefined) {
+						result[row] = [];
+					}
+					result[row] = result[row].concat(sheet[row]);
+				}
+			}
+			return {
+				filename: data.filename,
+				sheets: result
+			};
+		});
+	}
 
 }
 
