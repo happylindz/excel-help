@@ -72,13 +72,28 @@ $(document).ready(function(){
 	$(document).on("click", "#submit-sheets", function(){
 		var sheetsData = {};
 		var sheets = $("#excel_form").find(".sheet-group");
+		var tag = false;
 		sheets.each(function(index, sheet){
 			var sheetName = $(sheet).find("h4 > .text-info > span").text();
 			sheetsData[sheetName] = {};
 			$(sheet).find(".form-group .excel-input").each(function(index, cell){
-				sheetsData[sheetName][$(cell).attr("data-type")] = $(cell).val();
+				var text =  $(cell).val();
+				sheetsData[sheetName][$(cell).attr("data-type")] = text;
+				if(text != "") {
+					tag = true;
+				}
 			})
 		});
+		if(!tag) {
+			swal({
+				title: "提交失败",
+				text: "提交信息为空",
+				type: "error",
+				confirmButtonText: "确认"
+			})
+
+			return false;
+		}
 		let data = {
 			userName: window.location.pathname.split("/")[1],
 			sheetKey: window.location.pathname.split("/")[2],

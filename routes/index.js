@@ -42,26 +42,28 @@ router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 	});
 }, (req, res) => {
 	xlsxHandler.saveFile(req.file.originalname).then((data) => {
-		let phone = req.body.phone;
-		fs.unlink(res.locals.path);
-		console.log(data);
-		res.send({
-			code: 0,
-			share: data.path,
-			download: data.download
-		});	
-		// let content = `用户名：${data.username}, 密码: ${data.password}，请妥善保管。`;
-		// let headers = {
-		// 	'X-Bmob-Application-Id': config.appID,
-		// 	'X-Bmob-REST-API-Key': config.restAPI,
-		// 	'Content-Type': 'application/json'
-		// };
-		// let body = {
-		// 	"mobilePhoneNumber": phone,
-		// 	"content": content
-		// }
-		// Utils.postInfo("https://api.bmob.cn/1/requestSms", headers, body);	
-		
+		if(data.code != 0) {
+			res.send(data);
+		}else {
+			let phone = req.body.phone;
+			fs.unlink(res.locals.path);
+			console.log(data);
+			res.send({
+				code: 0,
+				share: data.path,
+				download: data.download
+			});	
+			let content = `用户名：${data.username}, 密码: ${data.password}，请妥善保管。`;
+			let headers = {
+				'X-Bmob-Application-Id': config.appID,
+				'X-Bmob-REST-API-Key': config.restAPI,
+				'Content-Type': 'application/json'
+			};
+			let body = {
+				"mobilePhoneNumber": phone,
+				"content": content
+			}
+g		}
 	}).catch((err) => {
 		console.log(err);
 	})
@@ -113,31 +115,6 @@ router.get("/download/:id", (req, res, next) => {
 		})
 	})
 });
-
-
-// router.get("/download/:id/result", (req, res, next) => {
-// 	let id = req.params.id;
-// 	function unauthorized(res) { 
-//     res.set('WWW-Authenticate', 'Basic realm=Input User&Password');
-//     return res.sendStatus(401);
-//   }
-//   let user = basicAuth(res);
-//   if (!user || !user.name || !user.pass) {
-//     return unauthorized(res);
-//   }
-//   xlsxHandler.checkUser(id).then((data) => {
-//   	if(data.code != 0) {
-//   		return unauthorized(res);
-//   	}
-//   	if(data.username = user.name && data.password == user.pass) {
-//   		res.locals.username = user.name;
-//   		res.locals.password = user.pass;
-//   		next();
-//   	}else {
-//   		return unauthorized(res);
-//   	}
-//   })
-// });
 
 
 router.get("/download/:id/result", (req, res) => {

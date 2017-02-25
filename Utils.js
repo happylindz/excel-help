@@ -1,5 +1,6 @@
-let http = require('http');
-let url = require('url');
+let request = require('request');
+
+
 function checkPhone(mobile) {
   let re = /^1[3|5|7|8][0-9]\d{8}$/;  
   if(!re.test(mobile))  
@@ -10,29 +11,44 @@ function checkPhone(mobile) {
   }  
 }
 
+// function postInfo(path, headers, body) {
+// 	let urlOptions = url.parse(path);
+// 	console.log(body);
+// 	let post_options = {
+// 		host: urlOptions.host,
+// 		path: urlOptions.pathname,
+// 		method: 'POST',
+// 		headers: headers
+// 	}
+// 	console.log(post_options);
+// 	let post_req = http.request(post_options, (res) => {
+// 		var chunk = "";
+// 		res.on('data', (data) => {
+// 			chunk += data;
+// 		});
+// 		res.on('end', () => {
+// 			console.log(chunk);
+// 		})
+// 	});
+// 	post_req.write(querystring.stringify(body));
+// 	post_req.end();
+// }
+// 
+
 function postInfo(path, headers, body) {
-	let urlOptions = url.parse(path);
-	let post_options = {
-		host: urlOptions.protocol + "//" + urlOptions.host,
-		port: '80',
-		path: urlOptions.pathname,
+	var options = {
+		uri: path,
 		method: 'POST',
+		json: body,
 		headers: headers
 	}
-	let post_req = http.request(post_options, (res) => {
-		var chunk = "";
-		res.on('data', (data) => {
-			chunk += data;
-		});
-		res.on('end', () => {
-			console.log(chunk);
-		})
-	});
-	console.log(headers);
-	console.log(body);
-	post_req.write(JSON.stringify(body));
-	post_req.end();
+	request(options, (err, res, body) => {
+		if (!err && res.statusCode == 200) {
+			console.log(body);
+  	}
+	})
 }
+
 
 module = module.exports = {
 	checkPhone: checkPhone,

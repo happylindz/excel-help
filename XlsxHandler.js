@@ -30,12 +30,19 @@ let DataHandler = require("./DataHandler.js");
 				if(z[0] === '!'){
 					continue;
 				}
+				if(z[1] != 1) {
+					return Promise.resolve({
+						code: 3, 
+						message: "上传文件格式有误"
+					});
+				}
 				data["sheets"][sheetname].push(worksheet[z].v)
 			}
 		}
 		return this.excel.insertSheet(data).then((result) => {
 			result["path"] = "excel/" + data["fileid"];
 			result['download'] = "download/" + data["fileid"];
+			result['code'] = 0;
 			return result;
 		});
 	}

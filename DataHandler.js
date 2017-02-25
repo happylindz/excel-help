@@ -6,7 +6,7 @@ class DataHandler {
 		let connection = mysql.createConnection({
 		  host     : 'localhost',
 		  user     : 'root',
-		  password : 'root',
+		  password : 'root1995',
 		  database : 'excel'
 		})
 		connection.connect();
