@@ -66,7 +66,7 @@ class DataHandler {
 			let sql = `insert into excel(filename, fileid, sheetname) values('${filename}', '${fileid}', '${key}');`; 
 			collections.push(sql);
 			data.sheets[key].forEach((item) => {
-				sql = `insert into excelInfo(fileid, sheetname, keyname) values('${fileid}', '${key}', "${item}");`;
+				sql = `insert into excelinfo(fileid, sheetname, keyname) values('${fileid}', '${key}', "${item}");`;
 				fields.push(item);
 				collections.push(sql);
 			});
