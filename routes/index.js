@@ -63,7 +63,7 @@ router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 				"mobilePhoneNumber": phone,
 				"content": content
 			}
-g		}
+		}
 	}).catch((err) => {
 		console.log(err);
 	})
