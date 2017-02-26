@@ -63,6 +63,7 @@ router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 				"mobilePhoneNumber": phone,
 				"content": content
 			}
+			Utils.postInfo('https://api.bmob.cn/1/requestSms', headers, body);
 		}
 	}).catch((err) => {
 		console.log(err);
