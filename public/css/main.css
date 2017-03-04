@@ -138,3 +138,9 @@ body{
 .not-found > img {
   width: 100%;
 }
+
+
+#filled {
+  font-size: 14px;
+  margin-left: 100px;
+}

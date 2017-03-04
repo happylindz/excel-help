@@ -125,7 +125,8 @@ let DataHandler = require("./DataHandler.js");
 			}
 			return {
 				filename: data.filename,
-				sheets: result
+				sheets: result,
+				num: data.num
 			};
 		});
 	}

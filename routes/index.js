@@ -106,7 +106,8 @@ router.get('/download/preview', (req, res, next) => {
 			res.render("download.ejs", {
 				title: "Excel 表格助手下载页面",
 				excel: result,
-				id: data.id
+				id: data.id,
+				filled: result.num
 			})
 		})
 	}else {

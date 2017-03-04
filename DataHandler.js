@@ -152,6 +152,7 @@ class DataHandler {
 
 		return Promise.all([filePromise, sheetPromise, dataPromise]).then(([file, sheets, data]) => {	
 			result.filename = file[0].filename;
+			result.num = data.length;
 			result.code = 0;
 			let keyMap = {};
 			file.forEach((item) => {
