@@ -1,13 +1,14 @@
 let mysql = require('mysql');
+let config = require('./config/config.js').database;
 
 class DataHandler {
 
 	constructor() {
 		let connection = mysql.createConnection({
-		  host     : 'localhost',
-		  user     : 'root',
-		  password : 'root1995',
-		  database : 'excel'
+		  host     : config.host,
+		  user     : config.user,
+		  password : config.password,
+		  database : config.database
 		})
 		connection.connect();
 		this.connection = connection;
@@ -15,30 +16,22 @@ class DataHandler {
 
 	createAuth() {
 		let result = {
-			username: "",
-			password: ""
+			password: null
 		}
-		const arr = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-		let range = Math.round(Math.random() * 6);
-		for(let i = 0; i < range; i++) {
-			let pos = Math.round(Math.random() * (arr.length-1));
-			result.username += arr[pos];
-		}
-		let num = Math.floor(Math.random()*10000);
-		result.username += num;
-		result.password += Math.floor(Math.random()*10000);
+		do {
+			result.password = Math.floor(Math.random()*10000);
+		}while(result.password < 1000);
 		return result;
 	}
 
-	checkUser(id) {
-		const checkSQL = `select username, password from user where fileid='${id}';`;
+	checkUser(data) {
+		const checkSQL = `select fileid from user where phone=${data.phone} and password=${data.pass};`;
 		return this.queryPromise(checkSQL).then((data) => {
 			let result = {
 				code: -1
 			}
 			if(data.length != 0) {
-				result['username'] = data[0].username;
-				result['password'] = data[0].password;
+				result['fileid'] = data[0].fileid;
 				result.code = 0;
 			}
 			return result;
@@ -78,9 +71,9 @@ class DataHandler {
 		sql += `)auto_increment=10001;`;
 		collections.push(sql);
 		let auth = this.createAuth();
-		sql = `insert into user(fileid, username, password) values('${fileid}', '${auth.username}', '${auth.password}')`;
+		sql = `insert into user(fileid, phone, password) values('${fileid}', '${data.phone}', '${auth.password}')`;
 		collections.push(sql);
-		
+
 		return Promise.all(collections.map((sql) => {
 			return this.queryPromise(sql);
 		})).then(() => {

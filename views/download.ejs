@@ -1,0 +1,59 @@
+<% include header.ejs %>
+</head>
+<body>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid"> 
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Excel 助手</a>
+      </div>
+    </div>
+  </nav>
+
+	<div class="container">
+	    <!-- 巨幕作为该网页的标题-->
+	  <div class="row">
+	    <div class="jumbotron">
+	      <h1>轻松下载</h1>
+	      <p>查阅填表信息，确认无误后可点击下载。</p>
+	      <p>
+	        <a class="btn btn-success btn-lg" target="_blank" id="download" href="/downloads/<%=id %>">下载报告</a>
+	      </p>
+	    </div>
+	  </div>
+
+	  <!--需要填写的表单-->
+	  <div class="row">
+	    <!--显示表的名称-->
+
+	    <h2><strong class="text-info">你现在查阅的表是：<%=excel.filename %></strong></h2>
+	    <hr>
+			<table class="table table-bordered">
+				<%
+					var sheets = excel.sheets;
+					for(var i = 0; i < sheets.length; i++) {
+				%>
+					<tr>
+						<%
+							for(var j = 0; j < sheets[i].length; j++) {
+						%>
+						<td><%= sheets[i][j] %></td>
+						<% 
+							}
+						%>
+					</tr>
+				<%	 	
+					 }
+				%>
+			</table>
+
+	  </div>
+	  <!--脚注-->
+	  <div class="row">
+	    <footer class="text-center">
+	      <hr>
+	      <h4>Excel填表开发者@2017</h4>
+	    </footer>
+	  </div>
+	</div>
+<% include footer.ejs %>
+

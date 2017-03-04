@@ -41,19 +41,19 @@ router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 		next();
 	});
 }, (req, res) => {
-	xlsxHandler.saveFile(req.file.originalname).then((data) => {
+	xlsxHandler.saveFile(req.file.originalname, req.body.phone).then((data) => {
 		if(data.code != 0) {
 			res.send(data);
 		}else {
 			let phone = req.body.phone;
 			fs.unlink(res.locals.path);
-			console.log(data);
 			res.send({
 				code: 0,
 				share: data.path,
 				download: data.download
 			});	
-			let content = `用户名：${data.username}, 密码: ${data.password}，请妥善保管。`;
+			console.log(phone, data.password);
+			let content = `密码: ${data.password}，请妥善保管。`;
 			let headers = {
 				'X-Bmob-Application-Id': config.appID,
 				'X-Bmob-REST-API-Key': config.restAPI,
@@ -63,7 +63,7 @@ router.post("/upload", upload.single("excel_file"), (req, res, next) => {
 				"mobilePhoneNumber": phone,
 				"content": content
 			}
-			Utils.postInfo('https://api.bmob.cn/1/requestSms', headers, body);
+			// Utils.postInfo('https://api.bmob.cn/1/requestSms', headers, body);
 		}
 	}).catch((err) => {
 		console.log(err);
@@ -78,64 +78,91 @@ router.post("/submitdata", (req, res) => {
 	});
 })
 
-router.get("/download/:id", (req, res, next) => {
-	let id = req.params.id;
-	function unauthorized(res) { 
-    res.set('WWW-Authenticate', 'Basic realm=Input User&Password');
-    return res.sendStatus(401);
-  }
-  let user = basicAuth(res);
-  if (!user || !user.name || !user.pass) {
-    return unauthorized(res);
-  }
-  xlsxHandler.checkUser(id).then((data) => {
-  	if(data.code != 0) {
-  		return unauthorized(res);
-  	}
-  	if(data.username = user.name && data.password == user.pass) {
-  		res.locals.username = user.name;
-  		res.locals.password = user.pass;
-  		next();
-  	}else {
-  		return unauthorized(res);
-  	}
-  })
+router.get('/download', (req, res, next) => {
+	res.render('login');
 });
 
-router.get("/download/:id", (req, res, next) => {
-	let data = {
-		id: req.params.id
-	};
-	xlsxHandler.findFile(data).then((result) => {
-		res.render("downloads.ejs", {
-			title: "Excel 表格助手下载页面",
-			excel: result,
-			username: res.locals.username,
-			password: res.locals.password,
-			id: data.id
-		})
-	})
-});
-
-
-router.get("/download/:id/result", (req, res) => {
-	let data = {
-		id: req.params.id
-	}
-	xlsxHandler.exportFile(data).then((result) => {
-		if(result == false) {
-			next();
+router.post('/download', (req, res, next) => {
+	xlsxHandler.checkUser(req.body).then(result => {
+		if(result.code == 0) {
+			req.session.fileid = result.fileid;
+			req.session.checked = true;
+			res.redirect('/download/preview');
 		}else {
-			res.download("./downloads/" + result, (err) => {
-				if(err) {
-					console.log(err);
-				}else {
-					fs.unlink("./downloads/" + result);
-				}
-			})
+			res.render('fail.ejs');
 		}
-	});
+	}); 
+});
+
+router.get('/download/preview', (req, res, next) => {
+	if(req.session.checked && req.session.fileid) {
+		let data = {
+			id: req.session.fileid
+		};
+		return xlsxHandler.findFile(data).then((result) => {
+			if(result == false) {
+				next();
+			}
+			res.render("download.ejs", {
+				title: "Excel 表格助手下载页面",
+				excel: result,
+				id: data.id
+			})
+		})
+	}else {
+		next();
+	}
+});
+
+// router.get("/download/:id", (req, res, next) => {
+// 	let id = req.params.id;
+// 	function unauthorized(res) { 
+//     res.set('WWW-Authenticate', 'Basic realm=Input User&Password');
+//     return res.sendStatus(401);
+//   }
+//   let user = basicAuth(res);
+//   if (!user || !user.name || !user.pass) {
+//     return unauthorized(res);
+//   }
+//   xlsxHandler.checkUser(id).then((data) => {
+//   	if(data.code != 0) {
+//   		return unauthorized(res);
+//   	}
+//   	if(data.username = user.name && data.password == user.pass) {
+//   		res.locals.username = user.name;
+//   		res.locals.password = user.pass;
+//   		next();
+//   	}else {
+//   		return unauthorized(res);
+//   	}
+//   })
+// });
+
+
+router.get("/downloads/:id", (req, res, next) => {
+	if(req.session.checked && req.session.fileid) {
+		let data = {
+			id: req.session.fileid
+		}
+		xlsxHandler.exportFile(data).then((result) => {
+			if(result == false) {
+				next();
+			}else {
+				res.download("./downloads/" + result, (err) => {
+					if(err) {
+						console.log(err);
+						next();
+					}else {
+						fs.unlink("./downloads/" + result);
+					}
+				})
+			}
+		});
+	}else {
+		next();
+	}
 })
+
 
 router.get("/excel/:id", (req, res, next) => {
 	let data = {
@@ -153,13 +180,36 @@ router.get("/excel/:id", (req, res, next) => {
 	});	
 })
 
+// router.get('/clear', (req, res, next) => {
+// 	if(req.session.checked && req.session.fileid) {
+// 		let data = {
+// 			id: req.session.fileid
+// 		}
+// 		xlsxHandler.clearFile(data).then((result) => {
+// 			if(result == false) {
+// 				next();
+// 			}else {
+// 				res.download("./downloads/" + result, (err) => {
+// 					if(err) {
+// 						console.log(err);
+// 						next();
+// 					}else {
+// 						fs.unlink("./downloads/" + result);
+// 					}
+// 				})
+// 			}
+// 		});
+// 	}else {
+// 		next();
+// 	}
+// });
+
 router.get("/template", (req, res) => {
 	res.download("./template.xlsx");
 });
 
 router.all('*', (req, res) => {
-	res.send("您查找的页面未能找到，请重新输入。");
+	res.render('404.ejs');
 });
-
 
 module.exports = router;

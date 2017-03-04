@@ -3,6 +3,7 @@ let path = require('path');
 let fs = require('fs');
 let queryString = require('querystring')
 let bodyParser = require('body-parser');
+let session = require('express-session');
 let app = express();
 let routes = require("./routes/index.js");
 
@@ -13,6 +14,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json({
 	limit: '50mb'
+}));
+app.use(session({
+  secret: 'keyboard cat',
+  cookie: { maxAge: 3600000 }
 }));
 
 app.use(express.static(__dirname + '/public'));

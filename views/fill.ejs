@@ -1,54 +1,71 @@
 <% include header.ejs %>
-<div class="container">
-    <!-- 巨幕作为该网页的标题-->
-  <div class="row">
-    <div class="jumbotron">
-      <h1>让填表格更简单</h1>
-      <p>乖乖填好表格然后交给班长吧:)</p>
+</head>
+<body>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid"> 
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Excel 助手</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+      <!-- 巨幕作为该网页的标题-->
+    <div class="row">
+      <div class="jumbotron">
+        <h1>让填表格更简单</h1>
+        <p>乖乖填好表格然后交给班长吧:)</p>
+      </div>
+    </div>
+
+    <!--需要填写的表单-->
+    <div class="row excel-form">
+      <!--显示表的名称-->
+      <h2><strong class="text-info">你现在填写的表是：<%=excel.filename %></strong></h2>
+      <hr>
+      <form id="excel_form" class="form-horizontal" role="form">
+          
+        <!-- 遍历标题 -->
+        <%  
+          let sheets_count = 0;
+          for(let key in excel.sheets){
+            sheets_count++;
+        %>
+        <div class="sheet-group">
+          <h4><strong class="text-info">工作表<%=sheets_count %>：<span><%=key %></span></strong></h4>
+          <%      
+            let count = 0;
+            excel.sheets[key].forEach(function(sheet){
+            count ++;
+          %>
+          <div class="form-group">
+            <label class="control-label col-sm-2 text-left"><%=sheet %>:</label>
+            <div class="col-sm-10">
+              <input type="text" name="input-<%=sheets_count %>-<%=count %>" class="form-control excel-input" data-type="<%=sheet %>">
+            </div>
+          </div>
+          <%
+            })
+          %>
+        </div>        
+        <%
+            }
+        %>
+
+        <!--显示提交按钮的div-->
+        <div>
+          <button type="button" id="submit-sheets" class="btn btn-primary btn-block">提交信息</button>
+          <button type="reset" class="btn btn-danger btn-block">重置信息</button>
+        </div>
+      </form>
+    </div>
+    <!--脚注-->
+    <div class="row">
+      <footer class="text-center">
+        <hr>
+        <h4>Excel填表开发者@2017</h4>
+      </footer>
     </div>
   </div>
-
-  <!--需要填写的表单-->
-  <div class="row excel-form">
-    <!--显示表的名称-->
-    <h2><strong class="text-info">你现在填写的表是：<%=excel.filename %></strong></h2>
-    <hr>
-    <form id="excel_form" class="form-horizontal" role="form">
-        
-      <!-- 遍历标题 -->
-      <%  
-        let sheets_count = 0;
-        for(let key in excel.sheets){
-          sheets_count++;
-      %>
-      <div class="sheet-group">
-        <h4><strong class="text-info">工作表<%=sheets_count %>：<span><%=key %></span></strong></h4>
-        <%      
-          let count = 0;
-          excel.sheets[key].forEach(function(sheet){
-          count ++;
-        %>
-        <div class="form-group">
-          <label class="control-label col-sm-2 text-left"><%=sheet %>:</label>
-          <div class="col-sm-10">
-            <input type="text" name="input-<%=sheets_count %>-<%=count %>" class="form-control excel-input" data-type="<%=sheet %>">
-          </div>
-        </div>
-        <%
-          })
-        %>
-      </div>        
-      <%
-          }
-      %>
-
-      <!--显示提交按钮的div-->
-      <div>
-        <button type="button" id="submit-sheets" class="btn btn-primary btn-block">提交信息</button>
-        <button type="reset" class="btn btn-danger btn-block">重置信息</button>
-      </div>
-    </form>
-  </div>
-
 <% include footer.ejs %>
 

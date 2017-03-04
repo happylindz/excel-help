@@ -9,15 +9,20 @@ let DataHandler = require("./DataHandler.js");
  		this.excel = new DataHandler();
  	}
 
- 	checkUser(id) {
- 		return this.excel.checkUser(id);
+ 	checkUser(data) {
+ 		return this.excel.checkUser(data);
  	}
+ 	
+ 	trim(str){ 
+ 		return str.replace(/(^\s*)|(\s*$)/g, ""); 
+	} 
 
- 	saveFile(fileName) {
+ 	saveFile(fileName, phone) {
 		let workbook = XLSX.readFile(__dirname + "/upload/" + fileName);
 		let sheet_name_list = workbook.SheetNames;
 		let data = {};
 		data['filename'] = fileName;
+		data['phone'] = phone;
 		data['fileid'] = new Date().getTime();
 		data['sheets'] = {};
 		for(let i = 0; i < sheet_name_list.length; i++) {
@@ -30,18 +35,20 @@ let DataHandler = require("./DataHandler.js");
 				if(z[0] === '!'){
 					continue;
 				}
-				if(z[1] != 1) {
+				if(z[1] != 1 && this.trim(worksheet[z].v) != "") {
 					return Promise.resolve({
 						code: 3, 
 						message: "上传文件格式有误"
 					});
 				}
-				data["sheets"][sheetname].push(worksheet[z].v)
+				if(this.trim(worksheet[z].v) != "") {
+					data["sheets"][sheetname].push(this.trim(worksheet[z].v))
+				}
 			}
 		}
 		return this.excel.insertSheet(data).then((result) => {
 			result["path"] = "excel/" + data["fileid"];
-			result['download'] = "download/" + data["fileid"];
+			result['download'] = "download";	
 			result['code'] = 0;
 			return result;
 		});
