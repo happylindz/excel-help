@@ -44,24 +44,42 @@ $(document).ready(function(){
 				var address = window.location.protocol + "//" + window.location.host + "/";
 				var shareAddress = address + res.share;
 				var downloadAddress = address + res.download;
-				var message = `填写地址为：${shareAddress}<br>收表地址为：${downloadAddress}<br>用户名及密码已发送手机，用户名及密码已短信发送，请妥善保管，以免信息泄露。'<div class="social-share" data-sites="weibo,qq,wechat,qzone" data-description="一键分享给朋友" data-wechat-qrcode-title="请打开微信扫一扫"></div>`;
+				var message = `填写地址：${shareAddress}<br>密码已短信发送，请妥善保管，以免信息泄露。'<div class="social-share" data-sites="weibo,qq,wechat,qzone" data-description="一键分享给朋友" data-wechat-qrcode-title="扫一扫，将表格分享给别人"></div>`;
 				swal({
 				  title: "上传成功",
 				  html: message,
 				  type: "success",
-				  confirmButtonText: "确认",
+				  confirmButtonText: "下一步",
 					allowOutsideClick: false
 				}).then(function() {
-					$("#excel_input").fileinput("reset");
-					$("#excel_input").val("");
+					var message = `收表地址：${downloadAddress}<br>通过上述网址获取填表结果。'<div class="social-share" data-sites="qq,wechat" data-description="请把收表地址收藏到你的微信上" data-wechat-qrcode-title="扫一扫, 收藏填表地址"></div>`;
+					swal({
+						title: '确认收表地址',
+						html: message,
+						type: 'success',
+						confirmButtonText: "确认",
+						allowOutsideClick: false
+					}).then(function() {
+						$("#excel_input").fileinput("reset");
+						$("#excel_input").val("");
+					}).catch(function(err) {
+						console.log(err);
+					});
+					var $config = {
+				  	url: downloadAddress,
+				  	title: "IForm 我收表",
+				  	description: "请收藏你的收表地址！",
+				  };
+					$('.social-share').share($config);
+
 				}).catch(function(err) {
 					console.log(err);
 				})
 
-				let $config = {
+				var $config = {
 			  	url: shareAddress,
-			  	title: "Excel 表格助手信息页面",
-			  	description: "快来填表格咯！",
+			  	title: "IForm 我收表",
+			  	description: "这里有份表格需要你填写！",
 			  };
 				$('.social-share').share($config);
 			}else {
