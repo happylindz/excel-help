@@ -72,6 +72,7 @@ class DataHandler {
 		let fileid = data.fileid;
 		let fields = [];
 		for(let key in data.sheets) {
+			console.log(filename);
 			let sql = `insert into excel(filename, fileid, sheetname) values('${filename}', '${fileid}', '${key}');`; 
 			collections.push(sql);
 			data.sheets[key].forEach((item) => {
