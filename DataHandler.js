@@ -4,6 +4,7 @@ let config = require('./config/config.js').database;
 class DataHandler {
 
 	handleDisconnect() {
+		let self = this;
 		let connection = mysql.createConnection({
 		  host     : config.host,
 		  user     : config.user,
@@ -13,14 +14,14 @@ class DataHandler {
 		connection.connect(function(err) {
     	if(err) {
       	console.log('error when connecting to db:', err);
-      	setTimeout(this.handleDisconnect.bind(this), 2000); 
+      	setTimeout(self.handleDisconnect, 2000); 
      	}
-  	}.bind(this));           
+  	});           
 		this.connection = connection;
-			this.connection.on('error', function(err) {
+		this.connection.on('error', function(err) {
 			console.log('db error:', err);
 			if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-				handleDisconnect();
+				self.handleDisconnect();
 			}else {
 				throw err;
 			}
