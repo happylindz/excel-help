@@ -21,12 +21,7 @@
     <div class="row">
       <div class="jumbotron">
         <h1>IForm 我收表</h1>
-        <p>你可以上传表格后将链接分享给你的同学，让他们填去吧:)</p>
-        <p>
-          <!--显示按钮用于打开Excel文件-->
-          <a class="btn btn-success btn-lg" id="preview" target="_blank" href="/img/template.png" >阅览表格模板</a>
-          <a class="btn btn-info btn-lg" target="_blank" href="/template" >下载表格模板</a>
-        </p>
+        <p>你可以将需要填写的表格上传，获得链接后发给你的同学让他们填写，即可得到汇总后的表格:)</p>
       </div>
     </div>
     <!--分割行-->
@@ -42,7 +37,7 @@
           <h3><strong>第一步</strong></h3>
         </div>
         <div class="panel-body">
-          <h4><strong>请阅览表格模板，并根据表格模版观察是否需要调整你的表格。</strong></h4>
+          <h4><strong>请<a class="btn btn-success" id="preview" target="_blank" href="/img/template.png" >阅览表格模板</a> 或 <a class="btn btn-info" target="_blank" href="/template" >下载表格模板</a>，并根据表格模版观察是否需要调整你的表格。</strong></h4>
         </div>
       </div>
 
@@ -56,7 +51,7 @@
       </div>
 
       <!--显示第二步的面板-->
-      <div class="panel panel-info">
+      <div class="panel panel-success">
         <div class="panel-heading">
           <h3><strong>第三步</strong></h3>
         </div>
@@ -66,7 +61,7 @@
       </div>
 
       <!--显示第三的面板-->
-      <div class="panel panel-success">
+<!--       <div class="panel panel-success">
         <div class="panel-heading">
           <h3><strong>第四步</strong></h1>
         </div>
@@ -75,7 +70,7 @@
         </div>
       </div>
     </div>
-
+ -->
     <!--分隔行-->
     <div class="row">
       <hr>
@@ -86,7 +81,7 @@
     <div class="row">
       <div class="form-group">
         <label>手机号: </label>
-        <input type="text" class="form-control" id="phonenumber" placeholder="重要信息将发送到你手机上">
+        <input type="text" class="form-control" id="phonenumber" placeholder="请填写你的手机号，收表密码将会发到你的手机上。">
       </div>
     </div>
     <!--选择Excel文件的输入框组件-->
