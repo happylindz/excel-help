@@ -50,24 +50,23 @@ $(document).ready(function(){
 				  title: "上传成功",
 				  html: message,
 				  type: "success",
-				  confirmButtonText: "下一步",
+				  confirmButtonText: "完成",
 					allowOutsideClick: false
-				});
-				// .then(function() {
-				// 	// 收表地址：${downloadAddress}<br>通过上述网址获取填表结果。
-				// 	var message = `至：<div class="social-share" data-sites="qq,wechat" data-description="请把收表地址收藏到你的微信上" data-wechat-qrcode-title="扫一扫, 收藏填表地址"></div>`;
-				// 	swal({
-				// 		title: '确认收表地址',
-				// 		html: message,
-				// 		type: 'success',
-				// 		confirmButtonText: "确认",
-				// 		allowOutsideClick: false
-				// 	}).then(function() {
-				// 		$("#excel_input").fileinput("reset");
-				// 		$("#excel_input").val("");
-				// 	}).catch(function(err) {
-				// 		console.log(err);
-				// 	});
+				}).then(function() {
+					// 收表地址：${downloadAddress}<br>通过上述网址获取填表结果。
+					// var message = `分享至：<div class="social-share" data-sites="qq,wechat" data-description="请把收表地址收藏到你的微信上" data-wechat-qrcode-title="扫一扫, 收藏填表地址"></div>`;
+					// swal({
+					// 	title: '确认收表地址',
+					// 	html: message,
+					// 	type: 'success',
+					// 	confirmButtonText: "确认",
+					// 	allowOutsideClick: false
+					// }).then(function() {
+					// 	$("#excel_input").fileinput("reset");
+					// 	$("#excel_input").val("");
+					// }).catch(function(err) {
+					// 	console.log(err);
+					// });
 					// var $config = {
 				 //  	url: downloadAddress,
 				 //  	title: "IForm 我收表",
